@@ -1,4 +1,6 @@
 #include "nbody_header.h"
+#include <math.h>
+#define PI 3.14159265
 
 void run_serial_problem(int nBodies, double dt, int nIters, char * fname)
 {
@@ -55,27 +57,34 @@ void run_serial_problem(int nBodies, double dt, int nIters, char * fname)
 // Randomizes all bodies to the following default criteria
 // Locations (uniform random between -1.0 < r < 1.0 )
 // Velocities (uniform random between -1.0e-3 < r < 1.0e3 )
+// Now it makes a spiral thing!
 // Masses (all equal at 1.0 / nBodies)
 // You should make this more exotic
 void randomizeBodies(Body * bodies, int nBodies)
 {
 	// velocity scaling term
-	double vm = 1.0e-3;
+	double vm = 1.0e-7;
+    double xdist; double ydist;
+    double frequency; double ifrac;
+    frequency = (8*PI)/nBodies;
 
 	for (int i = 0; i < nBodies; i++) {
 		// Initialize position between -1.0 and 1.0
-		bodies[i].x = 2.0 * (rand() / (double)RAND_MAX) - 1.0;
-		bodies[i].y = 2.0 * (rand() / (double)RAND_MAX) - 1.0;
-		bodies[i].z = 2.0 * (rand() / (double)RAND_MAX) - 1.0;
+        // Form spiral thing
+        ifrac = (i/nBodies);
+        xdist = 1.0; ydist = 1.0;
+		bodies[i].x = xdist*sin(ifrac*frequency);
+		bodies[i].y = ydist*sin(ifrac*frequency);
+		bodies[i].z = 2.0 * ifrac - 0.99;
 
 		// Intialize velocities
-		bodies[i].vx = 2.0*vm * (rand() / (double)RAND_MAX) - vm;
-		bodies[i].vy = 2.0*vm * (rand() / (double)RAND_MAX) - vm;
-		bodies[i].vz = 2.0*vm * (rand() / (double)RAND_MAX) - vm;
+		bodies[i].vx = (2.0*vm * (rand() / (double)RAND_MAX) - vm);
+		bodies[i].vy = (2.0*vm * (rand() / (double)RAND_MAX) - vm);
+		bodies[i].vz = (2.0*vm * (rand() / (double)RAND_MAX) - vm);
 
 		// Initialize masses so that total mass of system is constant
 		// regardless of how many bodies are simulated
-		bodies[i].mass = 1.0 / nBodies;
+		bodies[i].mass = 0.1 / nBodies;
 	}
 }
 
