@@ -24,6 +24,14 @@ typedef struct {
 	double mass;
 } Body;
 
+//Used in writing output, only need position
+typedef struct {
+	// Location r_i = (x,y,z)
+	double x;
+	double y;
+	double z;
+} BodyPosOnly;
+
 // serial.c
 void run_serial_problem(int nBodies, double dt, int nIters, char * fname);
 void randomizeBodies(Body * bodies, int nBodies);
@@ -39,5 +47,6 @@ void run_parallel_problem(int nBodies, double dt, int nIters, char * fname);
 void compute_forces_multi_set(Body * local, Body * remote, double dt, int n);
 void parallel_randomizeBodies(Body * bodies, int nBodies_per_rank, int mype, int nprocs);
 MPI_File initialize_IO(long nBodies, long nIters, char * fname, int mype);
-void distributed_write_timestep(Body * local_bodies, long nBodies_per_rank, int timestep, int nIters, int nprocs, int mype, MPI_File * fh);
+//void distributed_write_timestep(Body * local_bodies, long nBodies_per_rank, int timestep, int nIters, int nprocs, int mype, MPI_File * fh);
+void distributed_write_timestep(Body * local_bodies, int nBodies_per_rank, int timestep, int nIters, int nprocs, int mype, MPI_File * fh);
 #endif
